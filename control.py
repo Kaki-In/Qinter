@@ -229,8 +229,8 @@ class Sensors():
     def light():
         return _droid.sensorsGetLight().result
     
-    def accelometer():
-        return _droid.sensorsReadAccelometer().result
+    def accelerometer():
+        return _droid.sensorsReadAccelerometer().result
     
     def magnetometer():
         return _droid.sensorsReadMagnetometer().result
