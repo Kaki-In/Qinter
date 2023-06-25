@@ -10,13 +10,13 @@ from Qinter import *
 
 ---
 
-The you'll have to define a Layout, the support of your application : 
+Then you'll have to define a Layout, the support of your application : 
 
 ``` python
 class MainLayout(Layout):
     def __init__(self):
         super().__init__()
-        Self.initUI()
+        self.initUI()
         ... # write what you need for your app
     
     def initUI(self):
