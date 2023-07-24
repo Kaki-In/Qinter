@@ -61,6 +61,7 @@ Here is the list of the different views :
  - RadioGroup
  - RadioButton
  - ImageView
+ - ImageButton
 
 ---
 
