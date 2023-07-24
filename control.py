@@ -3,7 +3,8 @@ import time as _time
 
 _droid = _android()
 
-def getMainAndroid():return _droid
+def getMainAndroid():
+    return _droid
 
 class Clipboard():
     def getClipboard():
@@ -14,7 +15,7 @@ class Clipboard():
 
 class Vibrator():
     def vibrate(t = None):
-        if t==None:
+        if t is None:
             _droid.vibrate()
         else:
             _droid.vibrate(t)
@@ -29,7 +30,7 @@ class Toast():
 
 class Notification():
     def makeNotification(title, message, url = None):
-        if url==None:
+        if url is None:
             _droid.notify(title, message)
         else:
             _droid.notify(title, message, url)

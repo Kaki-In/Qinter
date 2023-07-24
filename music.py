@@ -14,7 +14,7 @@ class PlayError(Exception):
 def _getRandomString(length):
     a = ''
     for i in range(length):
-        a+=random.choice([random.choice([chr(i+0x41) for i in range(26)]), random.choice([chr(i+0x61) for i in range(26)])])
+        a += random.choice([random.choice([chr(i+0x41) for i in range(26)]), random.choice([chr(i+0x61) for i in range(26)])])
     return a
 
 def forceDestroyMusics():
@@ -53,22 +53,23 @@ class _musicThread(Thread):
 
 class Music():
     def __init__(self, path=None):
-        self._path=path
-        if not os.path.exists(path):raise FileNotFoundError("file {} has not been find".format(repr(path)))
-        self._musicId=_getRandomString(8)
+        self._path = path
+        if not os.path.exists(path):
+            raise FileNotFoundError("file {} has not been find".format(repr(path)))
+        self._musicId = _getRandomString(8)
         while self._musicId in _musicInstances:
-            self._musicId=_getRandomString(8)
-        _musicInstances.update({self._musicId:self})
-        self._loop=None
+            self._musicId = _getRandomString(8)
+        _musicInstances.update({self._musicId: self})
+        self._loop = None
 
     def setLoop(self, *loop):
-        if len(loop)==1:
-            self._loop=loop[0]
+        if len(loop) == 1:
+            self._loop = loop[0]
         else:
-            self._loop=Loop(*loop)
+            self._loop = Loop(*loop)
         
     def removeLoop(self):
-        self._loop=False
+        self._loop = False
         
     def loop(self):
         return self._loop
@@ -77,7 +78,7 @@ class Music():
         a = _droid.mediaPlay(self._path, self._musicId)
         if not a:
             raise PlayError("could not start the music")
-        if type(self._loop)==Loop:
+        if type(self._loop) is Loop:
             self._mainLoop()
     
     def _mainLoop(self):

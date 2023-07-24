@@ -8,52 +8,57 @@ import os
 _fsw2.FullScreenWrapper2App.initialize(_Android())
 
 class TagNames:
-    LINEAR_LAYOUT=0
-    TEXT_VIEW=1
-    EDIT_TEXT=2
-    BUTTON=3
-    SCROLL_VIEW=4
-    HORIZONTAL_SCROLL_VIEW=5
-    LIST_VIEW=6
-    VIEW=7
-    RELATIVE_LAYOUT=8
-    NUMBER_PICKER=9
-    RADIO_GROUP=10
-    RADIO_BUTTON=11
-    SEEK_BAR=12
-    IMAGE_VIEW=13
-    IMAGE_BUTTON=14
+    LINEAR_LAYOUT          = 0
+    TEXT_VIEW              = 1
+    EDIT_TEXT              = 2
+    BUTTON                 = 3
+    SCROLL_VIEW            = 4
+    HORIZONTAL_SCROLL_VIEW = 5
+    LIST_VIEW              = 6
+    VIEW                   = 7
+    RELATIVE_LAYOUT        = 8
+    NUMBER_PICKER          = 9
+    RADIO_GROUP            = 10
+    RADIO_BUTTON           = 11
+    SEEK_BAR               = 12
+    IMAGE_VIEW             = 13
+    IMAGE_BUTTON           = 14
 
 class _xmlScreen(_fsw2.Layout):
     def __init__(self, xml, parent):
         super().__init__(xml, "QSL4AUI")
-        self.parent=parent
+        self.parent = parent
+
     def on_show(self):
         self.parent._on_show()
+
     def on_close(self):
         self.parent._on_close()
 
 class Layout():
     def __init__(self, view=None):
         super().__init__()
-        self._view=view
+        self._view = view
+
     def setView(self, view):
-        self._view=view
+        self._view = view
+
     def getView(self):
         return self._view
+
     def show(self, keep = False):
-        if self._view!=None:
-            a="""<?xml version="1.0" encoding="utf-8"?>
+        if self._view != None:
+            a = """<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#0000"
     xmlns:android="http://schemas.android.com/apk/res/android">"""
-            a+=" "+str(self._view).replace("\n", "\n ")
-            a+="\n</LinearLayout>"
-            screen=_xmlScreen(a, self)
-            self._screen=screen
-            _fsw2.FullScreenWrapper2App.show_layout(screen,int(not keep))
+            a += " " + str( self._view ).replace("\n", "\n ")
+            a += "\n</LinearLayout>"
+            screen = _xmlScreen(a, self)
+            self._screen = screen
+            _fsw2.FullScreenWrapper2App.show_layout(screen, 0 if keep else 1)
 
     def _on_show(self):
         self._view._load_xmlConfig(self._screen.views)
@@ -88,119 +93,172 @@ class Layout():
     
 class _Orientable():
     def setOrientation(self, orient):
-        self._args["orientation"]=orient
-        try:self._view.orientation=orient
-        except:pass
+        self._args["orientation"] = orient
+        try:
+            self._view.orientation = orient
+        except:
+            pass
+
     def getOrientation(self):
         return self._args["orientation"]
 
 class _Colored():
     def setTextColor(self, color):
-        self._args["textColor"]=color
-        try:self._view.textColor=color
-        except:pass
+        self._args["textColor"] = color
+        try:
+            self._view.textColor = color
+        except:
+            pass
+
     def getTextColor(self):
         return self._args["textColor"]
 
 class _Textable(_Colored):
     def setText(self, text):
-        self._args["text"]=text
-        try:self._view.text=text
-        except:pass
+        self._args["text"] = text
+        try:
+            self._view.text = text
+        except:
+            pass
+
     def getText(self):
-        try:return self._view["text"]
-        except:return self._args["text"]
+        try:
+            return self._view["text"]
+        except:
+            return self._args["text"]
+
     def setTextSize(self, size):
-        self._args["textSize"]=size
-        try:self._view.textSize=size
-        except:pass
+        self._args["textSize"] = size
+        try:
+            self._view.textSize=size
+        except:
+            pass
+
     def getTextSize(self):
-        try:return self._view["textSize"]
-        except:return self._args["textSize"]
+        try:
+            return self._view["textSize"]
+        except:
+            return self._args["textSize"]
 
 class _Modifiable(_Textable):
     def setInputType(self, t):
-        self._args["inputType"]=t
-        try:self._view.inputType=t
-        except:pass
+        self._args["inputType"] = t
+        try:
+            self._view.inputType = t
+        except:
+            pass
+
     def getInputType(self):
         return self._args["inputType"]
+
     def setHint(self, h):
-        self._args["hint"]=h
-        try:self._view.hint=h
-        except:pass
+        self._args["hint"] = h
+        try:
+            self._view.hint = h
+        except:
+            pass
+
     def getHint(self):
         return self._args["hint"]
+
     def _onclick(self, view, key):
-        self._funcs[key](self, key)
+        if hasattr(self, '_funcs'):
+            self._funcs[key](self, key)
+
     def setOnKey(self, key, func):
-        try:self._funcs
-        except AttributeError:self._funcs={}
-        self._funcs.update({key:func})
+        if not hasattr(self, '_funcs'):
+            self._funcs = {}
+        self._funcs.update( {key: func} )
         self._view.add_event(_fsw2.key_EventHandler(key, self._view, lambda self, view, k=key:self._onclick(view, k)))
         
 class _Clickable():
     def _onclick(self, view, dummy):
         self._func(self, dummy)
+
     def setOnClickListener(self, func):
         self._func=func
         self._view.add_event(_fsw2.click_EventHandler(self._view, self._onclick))
 
 class _itemClickable():
     def _onclick(self, view, dummy):
-        self._func(self, dummy)
+        if hasattr(self, '_func'):
+            self._func(self, dummy)
+
     def setOnItemClickListener(self, func):
         self._func=func
         self._view.add_event(_fsw2.itemclick_EventHandler(self._view, self._onclick))
 
 class _Valueable():
     def setValue(self, value):
-        self._args["value"]=value
-        try:self._view.value=value
-        except:pass
-    def getValue(self):
-        try:return self._view["value"]
-        except:return self._args["value"]
-    def setMinValue(self, value):
-        self._args["min"]=value
-        self._args["minValue"]=value
+        self._args["value"] = value
         try:
-            self._view.min=value
-            self._view.minValue=value
-        except:pass
+            self._view.value = value
+        except:
+            pass
+
+    def getValue(self):
+        try:
+            return self._view["value"]
+        except:
+            return self._args["value"]
+
+    def setMinValue(self, value):
+        self._args["min"] = value
+        self._args["minValue"] = value
+        try:
+            self._view.min = value
+            self._view.minValue = value
+        except:
+            pass
+
     def getMinValue(self):
-        try:return self._view["min"] if self._view["min"]!='' else self._view["minValue"]
-        except:return self._args["min"]
+        try:
+            return self._view["min"] or self._view["minValue"]
+        except:
+            return self._args["min"]
+
     def setMaxValue(self, value):
         self._args["max"]=value
         self._args["maxValue"]=value
         try:
             self._view.max=value
             self._view.maxValue=value
-        except:pass
+        except:
+            pass
+
     def getMaxValue(self):
-        try:return self._view["max"] if self._view["max"]!='' else self._view["maxValue"]
-        except:return self._args["max"]
+        try:
+            return self._view["max"] or self._view["maxValue"]
+        except:
+            return self._args["max"]
 
 class _Checkable():
     def setChecked(self, checked):
-        self._args["checked"]=checked
-        try:self._view.checked=checked
-        except:pass
+        self._args["checked"] = checked
+        try:
+            self._view.checked = checked
+        except:
+            pass
+
     def getChecked(self):
-        try:return self._view["checked"]
-        except:return self._args["checked"]
+        try:
+            return self._view["checked"]
+        except:
+            return self._args["checked"]
 
 class _Sourced():
     def setSource(self, source):
-        self._args["src"]=source
-        try:self._view.src=source
-        except:pass
+        self._args["src"] = source
+        try:
+            self._view.src = source
+        except:
+            pass
+
     def getSource(self):
         return self._args["src"]
 
 def getSymbolName(symbol):
-    if type(symbol)==int:
+    if type(symbol) is int:
         return ['fill_parent', 
                 'match_parent', 
                 'wrap_content', 
@@ -218,154 +276,221 @@ def getSymbolName(symbol):
                 'top|right', 
                 'bottom|left'
                 'bottom|right'][symbol]
-    if type(symbol)==bool:
+
+    elif type(symbol) is bool:
         return "true" if symbol else "false"
+
     return symbol
 
 def _getRandomString(length):
     a = ''
     for i in range(length):
-        a+=random.choice([random.choice([chr(i+0x41) for i in range(26)]), random.choice([chr(i+0x61) for i in range(26)])])
+        a += random.choice([random.choice([chr(i+0x41) for i in range(26)]), random.choice([chr(i+0x61) for i in range(26)])])
     return a
 
 class View():
-    FILL_PARENT=0
-    MATCH_PARENT=1
-    WRAP_CONTENT=2
-    VISIBLE=3
-    INVISIBLE=4
-    HORIZONTAL=5
-    VERTICAL=6
-    CENTER=7
-    CENTER_VERTICAL=8
-    RIGHT=9
-    LEFT=10
-    TOP=11
-    BOTTOM=12
-    TOP_LEFT=13
-    TOP_RIGHT=14
-    BOTTOM_LEFT=15
-    BOTTOM_RIGHT=16
-    def __init__(self, tagName, id = None, **args):
-        self._type=tagName
-        self._args={}
-        self._id=id
-        self._main_id=_getRandomString(16)
+    FILL_PARENT     = 0
+    MATCH_PARENT    = 1
+    WRAP_CONTENT    = 2
+    VISIBLE         = 3 
+    INVISIBLE       = 4
+    HORIZONTAL      = 5
+    VERTICAL        = 6
+    CENTER          = 7
+    CENTER_VERTICAL = 8
+    RIGHT           = 9
+    LEFT            = 10
+    TOP             = 11
+    BOTTOM          = 12
+    TOP_LEFT        = 13
+    TOP_RIGHT       = 14
+    BOTTOM_LEFT     = 15
+    BOTTOM_RIGHT    = 16
+
+    def __init__(self, tagName, id=None, **args):
+        self._type = tagName
+        self._args = {}
+        self._id = id
+        self._main_id = _getRandomString(16)
         for i in _expected:
-            self._args[i]=_expected[i][1]
-            if _expected[i][1]==Exception and not i in _args:
-                raise ValueError("'"+i+"' is required")
+            self._args[i] = _expected[i][1]
+            if _expected[i][1] is Exception and not i in _args:
+                raise ValueError("'" + i + "' is required")
         for i in args:
-            if not i in _expected:raise ValueError("cannot find symbol '"+str(i)+"'")
-            if type(args[i])==int:
-                if not args[i] in _expected[i][0]:raise TypeError("invalid argument for "+str(i))
-            elif not type(args[i]) in _expected[i][0]:raise TypeError("invalid argument for "+str(i))
+            if not i in _expected:
+                raise ValueError("cannot find symbol '" + str(i) + "'")
+            if type(args[i]) is int:
+                if not args[i] in _expected[i][0]:
+                    raise TypeError("invalid argument for "+str(i))
+            elif not type(args[i]) in _expected[i][0]:
+                raise TypeError("invalid argument for "+str(i))
         self._args.update(args)
-        self._args['id']="@id/"+self._main_id
-        self._view=None
+        self._args['id'] = "@id/"+self._main_id
+        self._view = None
+
     def setLayoutWidth(self, lw):
-        self._args["layout_width"]=lw
-        try:self._view.layout_width=lw
-        except:pass
+        self._args["layout_width"] = lw
+        try:
+            self._view.layout_width = lw
+        except:
+            pass
+
     def getLayoutWidth(self):
         return self._args["layout_width"]
+
     def setLayoutHeight(self, lh):
-        self._args["layout_height"]=lh
-        try:self._view.layout_height=lh
-        except:pass
+        self._args["layout_height"] = lh
+        try:
+            self._view.layout_height = lh
+        except:
+            pass
+
     def getLayoutHeight(self):
         return self._args["layout_height"]
+
     def setLayoutWeight(self, lw):
-        self._args["layout_weight"]=lw
-        try:self._view.layout_weight=lw
-        except:pass
+        self._args["layout_weight"] = lw
+        try:
+            self._view.layout_weight = lw
+        except:
+            pass
+
     def getLayoutWeight(self):
         return self._args["layout_weight"]
+
     def setLayoutGravity(self, lg):
-        self._args["layout_gravity"]=lg
-        try:self._view.layout_gravity=lg
-        except:pass
+        self._args["layout_gravity"] = lg
+        try:
+            self._view.layout_gravity = lg
+        except:
+            pass
+
     def getLayoutGravity(self):
         return self._args["layout_gravity"]
+
     def setBackground(self, back):
-        self._args["background"]=back
-        try:self._view.background=back
-        except:pass
+        self._args["background"] = back
+        try:
+            self._view.background = back
+        except:
+            pass
+
     def getBackground(self):
         return self._args["background"]
+
     def setVisibility(self, lv):
-        self._args["visibility"]=lv
-        try:self._view.visibility=lv
-        except:pass
+        self._args["visibility"] = lv
+        try:
+            self._view.visibility = lv
+        except:
+            pass
+
     def getVisibility(self):
         return self._args["visibility"]
+
     def setId(self, id):
         self._id=id
+
     def getId(self):
         return self._id
+
     def getTagName(self):
         for i in dir(TagNames):
             return ["LinearLayout", "TextView", "EditText", "Button", "ScrollView", "HorizontalScrollView", "ListView", "View", "RelativeLayout", "NumberPicker", "RadioGroup", "RadioButton", "SeekBar", "ImageView", "ImageButton"][self._type]
+
     def _load_xmlConfig(self, views):
         self._view=views[self._main_id]
+
     def setAlignParentTop(self, alp):
-        self._args['layout_alignParentTop']=alp
-        try:self._view.layout_alignParentTop=alp
-        except:pass
+        self._args['layout_alignParentTop'] = alp
+        try:
+            self._view.layout_alignParentTop = alp
+        except:
+            pass
+
     def getAlignParentTop(self):
         return self._args['layout_alignParentTop']
+
     def setAlignParentBottom(self, alb):
-        self._args['layout_alignParentBottom']=alb
-        try:self._view.layout_alignParentBottom=alb
-        except:pass
+        self._args['layout_alignParentBottom'] = alb
+        try:
+            self._view.layout_alignParentBottom = alb
+        except:
+            pass
+
     def getAlignParentBottom(self):
         return self._args['layout_alignParentBottom']
+
     def setAlignParentRight(self, alr):
-        self._args['layout_alignParentRight']=alr
-        try:self._view.layout_alignParentRight=alr
-        except:pass
+        self._args['layout_alignParentRight'] = alr
+        try:
+            self._view.layout_alignParentRight = alr
+        except:
+            pass
+
     def getAlignParentRight(self):
         return self._args['layout_alignParentRight']
+
     def setAlignParentLeft(self, all):
-        self._args['layout_alignParentLeft']=all
-        try:self._view.layout_alignParentLeft=all
-        except:pass
+        self._args['layout_alignParentLeft'] = all
+        try:
+            self._view.layout_alignParentLeft = all
+        except:
+            pass
+
     def getAlignParentLeft(self):
         return self._args['layout_alignParentLeft']
+
     def setCenterInParent(self, cip):
-        self._args['layout_centerInParent']=cip
-        try:self._view.layout_centerInParent=cip
-        except:pass
+        self._args['layout_centerInParent'] = cip
+        try:
+            self._view.layout_centerInParent = cip
+        except:
+            pass
+
     def getCenterInParent(self):
         return self._args['layout_centerInParent']
+
     def setRotation(self, r):
-        self._args['rotation']=r
-        try:self._view.rotation=r
-        except:pass
+        self._args['rotation'] = r
+        try:
+            self._view.rotation = r
+        except:
+            pass
+
     def getRotation(self):
         return self._args['rotation']
+
     def findViewById(self, id):
-        if self.getId()==id:
+        if self.getId() == id:
             return self
+
     def __str__(self):
-        a="<"+self.getTagName()
+        a = "<" + self.getTagName()
         for i in _expected:
-            if self._args[i]!=_expected[i][1]:a+="\n android:"+str(i)+"="+repr(str(getSymbolName(self._args[i])))
-        a+="/>"
+            if self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
+        a += "/>"
         return a
+
     def __repr__(self):
-        return "<"+self.getTagName()+"/>"
+        return "<" + self.getTagName() + "/>"
 
 class _listed(View):
     def __init__(self, tagName, **args):
         super().__init__(tagName, **args)
-        self._list=[]
+        self._list = []
+
     def setList(self, liste):
-        try:self._view.set_listitems(list(liste))
-        except:pass
-        self._list=list(liste)
+        try:
+            self._view.set_listitems(list(liste))
+        except:
+            pass
+        self._list = list(liste)
+
     def getList(self):
         return self._list
+
     def _load_xmlConfig(self, views):
         super()._load_xmlConfig(views)
         self.setList(self.getList())
@@ -373,64 +498,78 @@ class _listed(View):
 class _containerView(View):
     def __init__(self, tagName, **args):
         super().__init__(tagName, **args)
-        if not tagName in [TagNames.RADIO_GROUP, TagNames.RELATIVE_LAYOUT, TagNames.LINEAR_LAYOUT]:raise TypeError("invalid container : not a container view")
-        self._views=[]
+        self._views = []
+
     def addView(self, view):
         self._views.append(view)
+
     def removeView(self, view):
         self._views.remove(view)
+
     def _load_xmlConfig(self, views):
         self._view=views[self._main_id]
         for i in self._views:
             i._load_xmlConfig(views)
+
     def findViewById(self, id):
-        if self.getId()==id:
+        if self.getId() == id:
             return self
+
         for i in self._views:
-            j=i.findViewById(id)
-            if j!=None:
+            j = i.findViewById(id)
+            if j is not None:
                 return j
+
     def __str__(self):
-        a="<"+self.getTagName()
+        a = "<" + self.getTagName()
         for i in _expected:
-            if self._args[i]!=_expected[i][1]:a+="\n android:"+str(i)+"="+repr(str(getSymbolName(self._args[i])))
+            if self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
+
         if self._views:
-            a+=">\n"
+            a += ">\n"
             for i in self._views:
-                b=str(i)
-                a+=" "+b.replace("\n", "\n ")+"\n"
-            a+="</"+self.getTagName()+">"
-        else:a+="/>"
+                b = str(i)
+                a += " " + b.replace("\n", "\n ") + "\n"
+            a += "</" + self.getTagName() + ">"
+        else:
+            a += "/>"
         return a
 
 class _displayerView(View):
     def __init__(self, tagName, **args):
         super().__init__(tagName, **args)
-        if not tagName in [TagNames.SCROLL_VIEW, TagNames.HORIZONTAL_SCROLL_VIEW]:raise TypeError("invalid container : not a displayer view")
         self._mainview=None
+
     def setView(self, view):
         self._mainview = view
+
     def removeView(self):
         self._mainview = None
+
     def _load_xmlConfig(self, views):
-        self._view=views[self._main_id]
+        self._view = views[self._main_id]
         self._mainview._load_xmlConfig(views)
+
     def findViewById(self, id):
-        if self.getId()==id:
+        if self.getId() == id:
             return self
-        j=self._mainview.findViewById(id)
-        if j!=None:
+        j = self._mainview.findViewById(id)
+        if j is not None:
             return j
+
     def __str__(self):
-        a="<"+self.getTagName()
+        a = "<" + self.getTagName()
         for i in _expected:
-            if self._args[i]!=_expected[i][1]:a+="\n android:"+str(i)+"="+repr(str(getSymbolName(self._args[i])))
+            if self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
         if not self._mainview is None:
-            a+=">\n"
-            b=str(self._mainview)
-            a+=" "+b.replace("\n", "\n ")+"\n"
-            a+="</"+self.getTagName()+">"
-        else:a+="/>"
+            a += ">\n"
+            b = str(self._mainview)
+            a += " " + b.replace("\n", "\n ") + "\n"
+            a += "</" + self.getTagName() + ">"
+        else:
+            a += "/>"
         return a
 
 class TextView(View, _Textable):
@@ -494,94 +633,119 @@ class ImageButton(View, _Sourced, _Clickable):
         super().__init__(TagNames.IMAGE_BUTTON, **args)
 
 class Color():
-    BLACK=0x0
-    BLUE=0xff
-    BROWN=0x880000
-    CYAN=0xffff
-    DARKBLUE=0x88
-    DARKGREY=0x444444
-    GREEN=0x8800
-    GREY=0x888888
-    LIGHTGREEN=0x00ff00
-    LIGHTGREY=0xcccccc
-    MAGENTA=0xff00ff
-    MICROPORTAL=0x12b7ff
-    NUMWORKS=0xf8b430
-    ORANGE=0xff8800
-    RED=0xff0000
-    WHITE=0xffffff
-    YELLOW=0xffff00
-    TRANSPARENT=0x0
-    LIGHT_TRANSPARENT=0x44000000
-    MEDIUM_TRANSPARENT=0x88000000
-    LIGHT_OPAC=0xcc000000
-    OPAC=0xff000000
+    BLACK               = 0
+    BLUE                = 0xff
+    BROWN               = 0x880000
+    CYAN                = 0xffff
+    DARKBLUE            = 0x88
+    DARKGREY            = 0x444444
+    GREEN               = 0x8800
+    GREY                = 0x888888
+    LIGHTGREEN          = 0x00ff00
+    LIGHTGREY           = 0xcccccc
+    MAGENTA             = 0xff00ff
+    MICROPORTAL         = 0x12b7ff
+    NUMWORKS            = 0xf8b430
+    ORANGE              = 0xff8800
+    RED                 = 0xff0000
+    WHITE               = 0xffffff
+    YELLOW              = 0xffff00
+    TRANSPARENT         = 0
+    LIGHT_TRANSPARENT   = 0x44000000
+    MEDIUM_TRANSPARENT  = 0x88000000
+    LIGHT_OPAC          = 0xcc000000
+    OPAC                = 0xff000000
+    
     def __init__(self, col):
-        	self._color=col
+    	self._color = col
+
     def parseString(string):
         return Color(int(string[1:], 16))
+
     def fromARGB(argb):
-        a=Color(0)
+        a = Color(0)
         a.setARGB(argb)
         return a
-    def getColor(self):return self._color
+
+    def getColor(self):
+        return self._color
+
     def setColor(self, col):
-        self._color=col
+        self._color = col
+
     def getARGB(self):
         return tuple([self._color//0x1000000, (self._color//0x10000)%0x100, (self._color//0x100)%0x100, self._color%0x100])
+
     def setARGB(self, argb):
-        self._color=sum([argb[i]*(0x100**(3-i)) for i in range(4)])
+        self._color = sum([argb[i]*(0x100**(3-i)) for i in range(4)])
+
     def __str__(self):
-        a="#"
-        for i in range(8):a+="0123456789abcdef"[(self._color//(16**(7-i)))%16]
+        a = "#"
+        for i in range(8):
+            a += "0123456789ABCDEF"[(self._color//(16**(7-i)))%16]
         return a
+
     def __repr__(self):
-        return "Color("+hex(self._color)+")"
+        return "Color(" + hex(self._color) + ")"
 
 class Size():
-    UNIT_DP=0
-    UNIT_PX=1
+    UNIT_DP = 0
+    UNIT_PX = 1
     
     def __init__(self, size, unit):
-        self._size=(size, unit)
+        self._size = [size, unit]
+
     def setSize(self, size):
-        self._size[0]=size
+        self._size[0] = size
+
     def getSize(self):
         return self._size[0]
+
     def setUnit(self, unit):
-        self._size[1]=unit
+        self._size[1] = unit
+
     def getUnit(self):
         return self._size[1]
+
     def __str__(self):
-        return str(self._size[0])+["dp", "px"][self._size[1]]
+        return str(self._size[0]) + ["dp", "px"][self._size[1]]
+
     def __repr__(self):
-        return "Size("+str(self._size[0])+", Size."+["UNIT_DP", "UNIT_PX"][self._size[1]]
+        return "Size(" + str(self._size[0]) + ", Size."+["UNIT_DP", "UNIT_PX"][self._size[1]]
 
 class Value():
     def __init__(self, value):
-        self._value=value
+        self._value = value
+
     def getValue(self):
         return self._value
+
     def setValue(self, value):
-        self._value=value
+        self._value = value
+
     def __str__(self):
         return str(self._value)
 
 class Path():
     def __init__(self, path):
         self.verify(path)
-        self._path=path
+        self._path = path
+
     def verify(self, path):
         if not os.path.exists(path):
-            raise FileNotFoundError("couldn't find path for "+path)
+            raise FileNotFoundError("couldn't find path for " + path)
+
     def setPath(self, path):
         self.verify(path)
-        self._path=path
-    getPath = lambda self:self._path
+        self._path = path
+
+    getPath = lambda self: self._path
+
     def __str__(self):
-        return "file://"+self._path
+        return "file://" + self._path
+
     def __repr__(self):
-        return "Path("+repr(self._path)+")"
+        return "Path(" + repr(self._path) + ")"
 
 _expected={
 	 "layout_width":[[View.FILL_PARENT, View.MATCH_PARENT, View.WRAP_CONTENT, Size], Size(0, Size.UNIT_DP)],
@@ -627,21 +791,27 @@ class _ressource():
     def __init__(self, typeof):
         self._vals = {}
         self._type = typeof
+
     def __setattr__(self, attr, val):
         if attr in ['_vals', '_type']:
             return object.__setattr__(self, attr, val)
-        if type(val)==self._type:
-            self._vals[attr]=val
+        if type(val) is self._type:
+            self._vals[attr] = val
         else:
             raise TypeError("a {} is required, not a {}".format(self._type.__name__, type(val).__name__))
+
     def __getattr__(self, attr):
         if attr in ['_vals', '_type']:
             return {'_vals':object.__getattribute__(self, '_vals'), '_type':object.__getattribute__(self, '_type')}[attr]
+
         return self._vals[attr]
+
     def __dir__(self):
         return list(self._vals)
+
     def __repr__(self):
         return "<ressource({})>".format(self._type.__name__)
+
     def __str__(self):
         return "<ressource({})>".format(self._type.__name__)
         
