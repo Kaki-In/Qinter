@@ -118,6 +118,27 @@ class _Textable(_Colored):
         try:return self._view["textSize"]
         except:return self._args["textSize"]
 
+class _Modifiable(_Textable):
+    def setInputType(self, t):
+        self._args["inputType"]=t
+        try:self._view.inputType=t
+        except:pass
+    def getInputType(self):
+        return self._args["inputType"]
+    def setHint(self, h):
+        self._args["hint"]=h
+        try:self._view.hint=h
+        except:pass
+    def getHint(self):
+        return self._args["hint"]
+    def _onclick(self, view, key):
+        self._funcs[key](self, key)
+    def setOnKey(self, key, func):
+        try:self._funcs
+        except AttributeError:self._funcs={}
+        self._funcs.update({key:func})
+        self._view.add_event(_fsw2.key_EventHandler(key, self._view, lambda self, view, k=key:self._onclick(view, k)))
+        
 class _Clickable():
     def _onclick(self, view, dummy):
         self._func(self, dummy)
@@ -131,15 +152,6 @@ class _itemClickable():
     def setOnItemClickListener(self, func):
         self._func=func
         self._view.add_event(_fsw2.itemclick_EventHandler(self._view, self._onclick))
-
-class _Changeable():
-    def _onclick(self, view, key):
-        self._funcs[key](self, key)
-    def setOnKey(self, key, func):
-        try:self._funcs
-        except AttributeError:self._funcs={}
-        self._funcs.update({key:func})
-        self._view.add_event(_fsw2.key_EventHandler(key, self._view, lambda self, view, k=key:self._onclick(view, k)))
 
 class _Valueable():
     def setValue(self, value):
@@ -197,7 +209,7 @@ def getSymbolName(symbol):
                 'horizontal', 
                 'vertical',
                 'center',
-                'cetner-vertical',
+                'center-vertical',
                 'right', 
                 'left', 
                 'top', 
@@ -263,6 +275,18 @@ class View():
         except:pass
     def getLayoutHeight(self):
         return self._args["layout_height"]
+    def setLayoutWeight(self, lw):
+        self._args["layout_weight"]=lw
+        try:self._view.layout_weight=lw
+        except:pass
+    def getLayoutWeight(self):
+        return self._args["layout_weight"]
+    def setLayoutGravity(self, lg):
+        self._args["layout_gravity"]=lg
+        try:self._view.layout_gravity=lg
+        except:pass
+    def getLayoutGravity(self):
+        return self._args["layout_gravity"]
     def setBackground(self, back):
         self._args["background"]=back
         try:self._view.background=back
@@ -417,7 +441,7 @@ class LinearLayout(_containerView, _Orientable):
     def __init__(self, **args):
         super().__init__(TagNames.LINEAR_LAYOUT, **args)
 
-class EditText(View, _Textable, _Clickable, _Changeable):
+class EditText(View, _Modifiable, _Clickable):
     def __init__(self, **args):
         super().__init__(TagNames.EDIT_TEXT, **args)
 
@@ -563,6 +587,7 @@ _expected={
 	 "layout_width":[[View.FILL_PARENT, View.MATCH_PARENT, View.WRAP_CONTENT, Size], Size(0, Size.UNIT_DP)],
 	 "layout_height":[[View.FILL_PARENT, View.MATCH_PARENT, View.WRAP_CONTENT, Size], Size(0, Size.UNIT_DP)],
 	 "layout_weight":[[Value], Value(0)],
+	 "layout_gravity":[[View.CENTER, View.CENTER_VERTICAL, View.RIGHT, View.LEFT, View.TOP, View.BOTTOM, View.TOP_LEFT, View.TOP_RIGHT, View.BOTTOM_LEFT, View.BOTTOM_RIGHT], View.TOP_LEFT],
 	 "visibility":[[View.VISIBLE, View.INVISIBLE], View.VISIBLE],
 	 "orientation":[[View.VERTICAL, View.HORIZONTAL], None],
 	 "text":[[str], ""],
@@ -574,6 +599,8 @@ _expected={
 	 "layout_alignParentRight":[[bool], False],
 	 "layout_centerInParent":[[bool], False],
 	 "textSize":[[Size], Size(16, Size.UNIT_DP)],
+	 "inputType":[[str], "text"],
+	 "hint":[[str], ""],
 	 "gravity":[[View.CENTER, View.CENTER_VERTICAL, View.RIGHT, View.LEFT, View.TOP, View.BOTTOM, View.TOP_LEFT, View.TOP_RIGHT, View.BOTTOM_LEFT, View.BOTTOM_RIGHT], View.TOP_LEFT],
 	 "padding":[[Size], Size(0, Size.UNIT_DP)],
 	 "paddingTop":[[Size], Size(0, Size.UNIT_DP)],
