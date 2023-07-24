@@ -275,10 +275,51 @@ def getSymbolName(symbol):
                 'top|left', 
                 'top|right', 
                 'bottom|left'
-                'bottom|right'][symbol]
+                'bottom|right',
+                'date',
+                'datetime',
+                'none',
+                'number',
+                'numberDecimal',
+                'numberPassword',
+                'numberSigned',
+                'phone',
+                'text',
+                'textAutoComplete',
+                'textAutoCorrect',
+                'textCapCharacters',
+                'textCapSentences',
+                'textCapWords',
+                'textEmailAddress',
+                'textEmailSubject',
+                'textEnableTextConversionSuggestions',
+                'textFilter',
+                'textImeMultiLine',
+                'textLongMessage',
+                'textMultiLine',
+                'textNoSuggestions',
+                'textPassword',
+                'textPersonName',
+                'textPhonetic',
+                'textPostalAddress',
+                'textShortMessage',
+                'textUri',
+                'textVisiblePassword',
+                'textWebEditText',
+                'textWebEmailAddress',
+                'textWebPassword',
+                'time'][symbol]
 
     elif type(symbol) is bool:
         return "true" if symbol else "false"
+        
+    elif type(symbol) is list:
+        a = ""
+        for i in symbol:
+            if a: 
+                a += "|"
+            a += getSymbolName(i)
+        return a
 
     return symbol
 
@@ -289,23 +330,58 @@ def _getRandomString(length):
     return a
 
 class View():
-    FILL_PARENT     = 0
-    MATCH_PARENT    = 1
-    WRAP_CONTENT    = 2
-    VISIBLE         = 3 
-    INVISIBLE       = 4
-    HORIZONTAL      = 5
-    VERTICAL        = 6
-    CENTER          = 7
-    CENTER_VERTICAL = 8
-    RIGHT           = 9
-    LEFT            = 10
-    TOP             = 11
-    BOTTOM          = 12
-    TOP_LEFT        = 13
-    TOP_RIGHT       = 14
-    BOTTOM_LEFT     = 15
-    BOTTOM_RIGHT    = 16
+    FILL_PARENT                                   = 0
+    MATCH_PARENT                                  = 1
+    WRAP_CONTENT                                  = 2
+    VISIBLE                                       = 3
+    INVISIBLE                                     = 4
+    HORIZONTAL                                    = 5
+    VERTICAL                                      = 6
+    CENTER                                        = 7
+    CENTER_VERTICAL                               = 8
+    RIGHT                                         = 9
+    LEFT                                          = 10
+    TOP                                           = 11
+    BOTTOM                                        = 12
+    TOP_LEFT                                      = 13
+    TOP_RIGHT                                     = 14
+    BOTTOM_LEFT                                   = 15
+    BOTTOM_RIGHT                                  = 16
+    
+    INPUT_DATE                                    = 17
+    INPUT_DATETIME                                = 18
+    INPUT_NONE                                    = 19
+    INPUT_NUMBER                                  = 20
+    INPUT_NUMBER_DECIMAL                          = 21
+    INPUT_NUMBER_PASSWORD                         = 22
+    INPUT_NUMBER_SIGNED                           = 23
+    INPUT_PHONE                                   = 24
+    INPUT_TEXT                                    = 25
+    INPUT_TEXT_AUTO_COMPLETE                      = 26
+    INPUT_TEXT_AUTO_CORRECT                       = 27
+    INPUT_TEXT_CAP_CHARACTERS                     = 28
+    INPUT_TEXT_CAP_SENTENCES                      = 29
+    INPUT_TEXT_CAP_WORDS                          = 30
+    INPUT_TEXT_EMAIL_ADDRESS                      = 31
+    INPUT_TEXT_EMAIL_SUBJECT                      = 32
+    INPUT_TEXT_ENABLE_TEXT_CONVERSION_SUGGESTIONS = 33
+    INPUT_TEXT_FILTER                             = 34
+    INPUT_TEXT_IME_MULTI_LINE                     = 35
+    INPUT_TEXT_LONG_MESSAGE                       = 36
+    INPUT_TEXT_MULTI_LINE                         = 37
+    INPUT_TEXT_NO_SUGGESTIONS                     = 38
+    INPUT_TEXT_PASSWORD                           = 39
+    INPUT_TEXT_PERSON_NAME                        = 40
+    INPUT_TEXT_PHONETIC                           = 41
+    INPUT_TEXT_POSTAL_ADDRESS                     = 42
+    INPUT_TEXT_SHORT_MESSAGE                      = 43
+    INPUT_TEXT_URI                                = 44
+    INPUT_TEXT_VISIBLE_PASSWORD                   = 45
+    INPUT_TEXT_WEB_EDIT_TEXT                      = 46
+    INPUT_TEXT_WEB_EMAIL_ADDRESS                  = 47
+    INPUT_TEXT_WEB_PASSWORD                       = 48
+    INPUT_TIME                                    = 49
+
 
     def __init__(self, tagName, id=None, **args):
         self._type = tagName
@@ -321,9 +397,16 @@ class View():
                 raise ValueError("cannot find symbol '" + str(i) + "'")
             if type(args[i]) is int:
                 if not args[i] in _expected[i][0]:
-                    raise TypeError("invalid argument for "+str(i))
+                    raise TypeError("invalid argument for " + str(i))
             elif not type(args[i]) in _expected[i][0]:
-                raise TypeError("invalid argument for "+str(i))
+                raise TypeError("invalid argument for " + str(i))
+            elif type(args[i]) is list:
+                for k in args[i]:
+                    if type(k) is int:
+                        if not k in _expected[i][0]:
+                            raise TypeError("invalid argument for " + str(i))
+                    elif not type(k) in _expected[i][0]:
+                        raise TypeError("invalid argument for " + str(i))
         self._args.update(args)
         self._args['id'] = "@id/"+self._main_id
         self._view = None
@@ -763,7 +846,7 @@ _expected={
 	 "layout_alignParentRight":[[bool], False],
 	 "layout_centerInParent":[[bool], False],
 	 "textSize":[[Size], Size(16, Size.UNIT_DP)],
-	 "inputType":[[str], "text"],
+	 "inputType":[[list, View.INPUT_DATE, View.INPUT_DATETIME, View.INPUT_NONE, View.INPUT_NUMBER, View.INPUT_NUMBER_DECIMAL, View.INPUT_NUMBER_PASSWORD, View.INPUT_NUMBER_SIGNED, View.INPUT_PHONE, View.INPUT_TEXT, View.INPUT_TEXT_AUTO_COMPLETE, View.INPUT_TEXT_AUTO_CORRECT, View.INPUT_TEXT_CAP_CHARACTERS, View.INPUT_TEXT_CAP_SENTENCES, View.INPUT_TEXT_CAP_WORDS, View.INPUT_TEXT_EMAIL_ADDRESS, View.INPUT_TEXT_EMAIL_SUBJECT, View.INPUT_TEXT_ENABLE_TEXT_CONVERSION_SUGGESTIONS, View.INPUT_TEXT_FILTER, View.INPUT_TEXT_IME_MULTI_LINE, View.INPUT_TEXT_LONG_MESSAGE, View.INPUT_TEXT_MULTI_LINE, View.INPUT_TEXT_NO_SUGGESTIONS, View.INPUT_TEXT_PASSWORD, View.INPUT_TEXT_PERSON_NAME, View.INPUT_TEXT_PHONETIC, View.INPUT_TEXT_POSTAL_ADDRESS, View.INPUT_TEXT_SHORT_MESSAGE, View.INPUT_TEXT_URI, View.INPUT_TEXT_VISIBLE_PASSWORD, View.INPUT_TEXT_WEB_EDIT_TEXT, View.INPUT_TEXT_WEB_EMAIL_ADDRESS, View.INPUT_TEXT_WEB_PASSWORD, View.INPUT_TIME], View.INPUT_TEXT],
 	 "hint":[[str], ""],
 	 "gravity":[[View.CENTER, View.CENTER_VERTICAL, View.RIGHT, View.LEFT, View.TOP, View.BOTTOM, View.TOP_LEFT, View.TOP_RIGHT, View.BOTTOM_LEFT, View.BOTTOM_RIGHT], View.TOP_LEFT],
 	 "padding":[[Size], Size(0, Size.UNIT_DP)],
