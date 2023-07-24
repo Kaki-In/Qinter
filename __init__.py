@@ -22,6 +22,7 @@ class TagNames:
     RADIO_BUTTON=11
     SEEK_BAR=12
     IMAGE_VIEW=13
+    IMAGE_BUTTON=14
 
 class _xmlScreen(_fsw2.Layout):
     def __init__(self, xml, parent):
@@ -280,7 +281,7 @@ class View():
         return self._id
     def getTagName(self):
         for i in dir(TagNames):
-            return ["LinearLayout", "TextView", "EditText", "Button", "ScrollView", "HorizontalScrollView", "ListView", "View", "RelativeLayout", "NumberPicker", "RadioGroup", "RadioButton", "SeekBar", "ImageView"][self._type]
+            return ["LinearLayout", "TextView", "EditText", "Button", "ScrollView", "HorizontalScrollView", "ListView", "View", "RelativeLayout", "NumberPicker", "RadioGroup", "RadioButton", "SeekBar", "ImageView", "ImageButton"][self._type]
     def _load_xmlConfig(self, views):
         self._view=views[self._main_id]
     def setAlignParentTop(self, alp):
@@ -381,7 +382,7 @@ class _containerView(View):
 class _displayerView(View):
     def __init__(self, tagName, **args):
         super().__init__(tagName, **args)
-        if not tagName in [TagNames.SCROLL_VIEW, TagNames.HORIZONTAL_SCROLL_VIEW]:raise TypeError("invalid container : not a container view")
+        if not tagName in [TagNames.SCROLL_VIEW, TagNames.HORIZONTAL_SCROLL_VIEW]:raise TypeError("invalid container : not a displayer view")
         self._mainview=None
     def setView(self, view):
         self._mainview = view
@@ -463,6 +464,10 @@ class RadioButton(View, _Checkable):
 class ImageView(View, _Sourced):
     def __init__(self, **args):
         super().__init__(TagNames.IMAGE_VIEW, **args)
+
+class ImageButton(View, _Sourced, _Clickable):
+    def __init__(self, **args):
+        super().__init__(TagNames.IMAGE_BUTTON, **args)
 
 class Color():
     BLACK=0x0
@@ -597,15 +602,15 @@ class _ressource():
         self._type = typeof
     def __setattr__(self, attr, val):
         if attr in ['_vals', '_type']:
-            return
+            return object.__setattr__(self, attr, val)
         if type(val)==self._type:
             self._vals[attr]=val
         else:
             raise TypeError("a {} is required, not a {}".format(self._type.__name__, type(val).__name__))
     def __getattr__(self, attr):
         if attr in ['_vals', '_type']:
-            return {'_vals':self._vals, '_type':self._type}[attr]
-        return self._val['attr']
+            return {'_vals':object.__getattribute__(self, '_vals'), '_type':object.__getattribute__(self, '_type')}[attr]
+        return self._vals[attr]
     def __dir__(self):
         return list(self._vals)
     def __repr__(self):
@@ -613,11 +618,10 @@ class _ressource():
     def __str__(self):
         return "<ressource({})>".format(self._type.__name__)
         
-class R():
-       string = _ressource(str)
-       color = _ressource(Color)
-       dimen = _ressource(Size)
-       integer = _ressource(int)
-       bool = _ressource(bool)
-       src = _ressource(Path)
-       
+class R:
+    string = _ressource(str)
+    color = _ressource(Color)
+    dimen = _ressource(Size)
+    integer = _ressource(int)
+    bool = _ressource(bool)
+    src = _ressource(Path)
