@@ -745,7 +745,8 @@ class Color():
     LIGHTGREY           = 0xcccccc
     MAGENTA             = 0xff00ff
     MICROPORTAL         = 0x12b7ff
-    NUMnWORKS            = 0xf8b430
+    NUMWORKS            = 0xf8b430
+    FLOPCREATION        = 0xffcf04
     ORANGE              = 0xff8800
     RED                 = 0xff0000
     WHITE               = 0xffffff
