@@ -383,7 +383,7 @@ class View():
     INPUT_TIME                                    = 49
 
 
-    def __init__(self, tagName, id=None, **args):
+    def __init__(self, tagName=TagNames.VIEW, id=None, **args):
         self._type = tagName
         self._args = {}
         self._id = id
@@ -687,10 +687,6 @@ class RelativeLayout(_containerView):
     def __init__(self, **args):
         super().__init__(TagNames.RELATIVE_LAYOUT, **args)
 
-class SimpleView(View):
-    def __init__(self, **args):
-        super().__init__(TagNames.VIEW, **args)
-
 class NumberPicker(View, _Valueable):
     def __init__(self, **args):
         super().__init__(TagNames.NUMBER_PICKER, **args)
@@ -714,6 +710,23 @@ class ImageView(View, _Sourced):
 class ImageButton(View, _Sourced, _Clickable):
     def __init__(self, **args):
         super().__init__(TagNames.IMAGE_BUTTON, **args)
+
+class CustomView(View):
+    def __init__(self, **args):
+        super().__init__(**args)
+    
+    def set(self, param, value):
+        self._args[param] = value
+        try:
+            self._view[param] = value
+        except:
+            pass
+    
+    def get(self, param):
+        try:
+            return self._view[param], self._args[param]
+        except:
+            return None, self._args[param]
 
 class Color():
     BLACK               = 0
