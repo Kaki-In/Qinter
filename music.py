@@ -1,5 +1,5 @@
 from androidhelper import Android
-from Qinter.thread import Thread
+from .thread import Thread
 import random
 import time
 import os
