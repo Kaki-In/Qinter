@@ -712,8 +712,9 @@ class ImageButton(View, _Sourced, _Clickable):
         super().__init__(TagNames.IMAGE_BUTTON, **args)
 
 class CustomView(View):
-    def __init__(self, **args):
+    def __init__(self, tagName, **args):
         super().__init__(**args)
+        self._tag = tagName
     
     def set(self, param, value):
         self._args[param] = value
@@ -727,6 +728,9 @@ class CustomView(View):
             return self._view[param], self._args[param]
         except:
             return None, self._args[param]
+    
+    def getTagName(self):
+        return str(self.tag)
 
 class Color():
     BLACK               = 0
@@ -741,7 +745,7 @@ class Color():
     LIGHTGREY           = 0xcccccc
     MAGENTA             = 0xff00ff
     MICROPORTAL         = 0x12b7ff
-    NUMWORKS            = 0xf8b430
+    NUMnWORKS            = 0xf8b430
     ORANGE              = 0xff8800
     RED                 = 0xff0000
     WHITE               = 0xffffff
