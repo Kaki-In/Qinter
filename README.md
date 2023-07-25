@@ -144,6 +144,7 @@ will still work.
 ### The Layout class : 
 
 
+----
 
 ## Parsing a string
 
@@ -185,7 +186,7 @@ element = parse(string)
 
 ```
 
-It is better to use instanced values (`Size(16,Size.UNIT_DP)`) for the values that are susceptibles to be changed and the strings (`"#ffff0000"`) for those that will not be modified. You can also use the resources (`R.dimen.buttonExplode`) for the constants import.
+It is better to use instanced values (`Size(16,Size.UNIT_DP)`) for the values that are susceptibles to be changed and the strings (`"#ffff0000"`) for those that will not be modified. You can also use the resources (`R.dimen.buttonExplode`) for the constant imports.
 
 Note that you can forget `android:` or `qpython:` in the beginning of the lines, that are there to be able to prase an xml android app, and if you add spaces into the constants (`Size(16, Size.UNIT_DP)` for example), the parse will not fail in the extent that they are into parenthesis (`[`, `{`, or `(`).
 
@@ -204,11 +205,19 @@ lin = element.findViewById("base layout")
 
 All elements parsed by the parser are in fact `CustomView`s.
 
+----
+
 ## The control
+
+----
 
 ## The musics
 
+----
+
 ## The threads
+
+----
 
 ## Examples
 
