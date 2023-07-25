@@ -711,7 +711,7 @@ class ImageButton(View, _Sourced, _Clickable):
     def __init__(self, **args):
         super().__init__(TagNames.IMAGE_BUTTON, **args)
 
-class CustomView(View):
+class CustomView(LinearLayout):
     def __init__(self, tagName, **args):
         super().__init__(**args)
         self._tag = tagName
@@ -730,7 +730,7 @@ class CustomView(View):
             return None, self._args[param]
     
     def getTagName(self):
-        return str(self.tag)
+        return str(self._tag)
 
 class Color():
     BLACK               = 0
