@@ -157,7 +157,7 @@ string = """
     android:layout_height=View.MATCH_PARENT
     orientation="vertical"
     qinter:id="base layout"
-    android:background=Color(Color.OPAC+COLOR.FLOPCREATION)>
+    android:background=Color(Color.OPAC+Color.FLOPCREATION)>
     <TextView
         layout_width=View.FILL_PARENT
         layout_height="0dp"
