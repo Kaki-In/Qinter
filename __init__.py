@@ -551,10 +551,21 @@ class View():
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
+            if i is id:
+                a += "\n android:" + str(i) + "=" + repr(self._id)
+            elif self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
+        a += "/>"
+        return a
+       
+    def displayString(self):
+        a = "<" + self.getTagName()
+        for i in _expected:
             if self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
         a += "/>"
         return a
+       
 
     def __repr__(self):
         return "<" + self.getTagName() + "/>"
@@ -606,13 +617,31 @@ class _containerView(View):
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
-            if self._args[i] != _expected[i][1]:
+            if i is id:
+                a += "\n android:" + str(i) + "=" + repr(self._id)
+            elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
 
         if self._views:
             a += ">\n"
             for i in self._views:
                 b = str(i)
+                a += " " + b.replace("\n", "\n ") + "\n"
+            a += "</" + self.getTagName() + ">"
+        else:
+            a += "/>"
+        return a
+
+    def displayString(self):
+        a = "<" + self.getTagName()
+        for i in _expected:
+            if self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
+
+        if self._views:
+            a += ">\n"
+            for i in self._views:
+                b = i.displayString()
                 a += " " + b.replace("\n", "\n ") + "\n"
             a += "</" + self.getTagName() + ">"
         else:
@@ -644,11 +673,27 @@ class _displayerView(View):
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
-            if self._args[i] != _expected[i][1]:
+            if i is id:
+                a += "\n android:" + str(i) + "=" + repr(self._id)
+            elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
         if not self._mainview is None:
             a += ">\n"
             b = str(self._mainview)
+            a += " " + b.replace("\n", "\n ") + "\n"
+            a += "</" + self.getTagName() + ">"
+        else:
+            a += "/>"
+        return a
+
+    def displayString(self):
+        a = "<" + self.getTagName()
+        for i in _expected:
+            if self._args[i] != _expected[i][1]:
+                a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
+        if not self._mainview is None:
+            a += ">\n"
+            b = self._mainview.displayString()
             a += " " + b.replace("\n", "\n ") + "\n"
             a += "</" + self.getTagName() + ">"
         else:
@@ -717,13 +762,18 @@ class CustomView(LinearLayout):
         self._tag = tagName
     
     def set(self, param, value):
-        self._args[param] = value
-        try:
-            self._view[param] = value
-        except:
-            pass
+        if param == 'id':
+            self._id = value
+        else:
+            self._args[param] = value
+            try:
+                self._view[param] = value
+            except:
+                pass
     
     def get(self, param):
+        if param == 'id':
+            return self._main_id, self._id
         try:
             return self._view[param], self._args[param]
         except:
