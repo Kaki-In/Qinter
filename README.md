@@ -188,7 +188,9 @@ element = parse(string)
 
 It is better to use instanced values (`Size(16,Size.UNIT_DP)`) for the values that are susceptibles to be changed and the strings (`"#ffff0000"`) for those that will not be modified. You can also use the resources (`R.dimen.buttonExplode`) for the constant imports.
 
-Note that you can forget `android:` or `qpython:` in the beginning of the lines, that are there to be able to prase an xml android app, and if you add spaces into the constants (`Size(16, Size.UNIT_DP)` for example), the parse will not fail in the extent that they are into parenthesis (`[`, `{`, or `(`).
+Note that you can forget `android:` or `qpython:` in the beginning of the lines, that are there to be able to parse an xml android app, and if you add spaces into the constants (`Size(16, Size.UNIT_DP)` for example), the parse will not fail in the extent that they are into parenthesis (`[]`, `{}`, or `()`). For the id, you must not use `@+id/`, that is useless with Qinter. Simply do `id="Bloup"` to set it.
+
+THE WAY TO PARSE A FILE IS NOT THE SAME THAT ANDROID. QINTER DON'T HAVE ALL THE FUNCTIONNALITIES THAT ANDROID HAVE.
 
 You'll then obtain a `LinearLayout` THAT CONTAINS THE `LinearLayout` IN THE STRING.
 To get this one, you can use :
