@@ -21,7 +21,7 @@ class MainLayout(Layout):
     
     def initUI(self):
         ... # here is the place where you'll define your views. 
-        # There is no way to parse a file for the moment
+            # You can also parse a string containing your data, but not that it will generate CustomViews
 
     def onShow(self):
         ...
@@ -55,7 +55,7 @@ Here is the list of the different views :
  - TextView
  - EditText
  - Button
- - SimpleView (the equivalent of a View, the name has been changed for generical reasons)
+ - View
  - NumberPicker
  - SeekBar
  - RadioGroup
@@ -70,6 +70,12 @@ To define a view, simply do it using his name :
 
 ``` python
 a = TextView(id="textId", gravity=View.TOP_LEFT, ...)
+```
+
+You can also use the CustomView, that inherits from all kind of views.
+
+``` python
+a = CustomView("TextView", id="textId", gravity=View.TOP_LEFT, ...)
 ```
 
 All the constants are defined into the `View` class : 
@@ -91,6 +97,40 @@ All the constants are defined into the `View` class :
 - TOP_RIGHT
 - BOTTOM_LEFT
 - BOTTOM_RIGHT
+- INPUT_DATE
+- INPUT_DATETIME
+- INPUT_NONE
+- INPUT_NUMBER
+- INPUT_NUMBER_DECIMAL
+- INPUT_NUMBER_PASSWORD
+- INPUT_NUMBER_SIGNED
+- INPUT_PHONE
+- INPUT_TEXT
+- INPUT_TEXT_AUTO_COMPLETE
+- INPUT_TEXT_AUTO_CORRECT
+- INPUT_TEXT_CAP_CHARACTERS
+- INPUT_TEXT_CAP_SENTENCES
+- INPUT_TEXT_CAP_WORDS
+- INPUT_TEXT_EMAIL_ADDRESS
+- INPUT_TEXT_EMAIL_SUBJECT
+- INPUT_TEXT_ENABLE_TEXT_CONVERSION_SUGGESTIONS
+- INPUT_TEXT_FILTER
+- INPUT_TEXT_IME_MULTI_LINE
+- INPUT_TEXT_LONG_MESSAGE
+- INPUT_TEXT_MULTI_LINE
+- INPUT_TEXT_NO_SUGGESTIONS
+- INPUT_TEXT_PASSWORD
+- INPUT_TEXT_PERSON_NAME
+- INPUT_TEXT_PHONETIC
+- INPUT_TEXT_POSTAL_ADDRESS
+- INPUT_TEXT_SHORT_MESSAGE
+- INPUT_TEXT_URI
+- INPUT_TEXT_VISIBLE_PASSWORD
+- INPUT_TEXT_WEB_EDIT_TEXT
+- INPUT_TEXT_WEB_EMAIL_ADDRESS
+- INPUT_TEXT_WEB_PASSWORD
+- INPUT_TIME
+
 
 Note that you can also modify the properties of the view that don't have any id.
 
@@ -104,6 +144,58 @@ will still work.
 ### The Layout class : 
 
 
+
+## Parsing a string
+
+You can also parse a string by this way :
+```python
+from Qinter.parser import parse
+
+string = """
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height=View.MATCH_PARENT
+    orientation="vertical"
+    qinter:id="base layout"
+    android:background=Color(Color.OPAC+COLOR.FLOPCREATION)>
+    <TextView
+        layout_width=View.FILL_PARENT
+        layout_height="0dp"
+        layout_weight=Value(3)
+        qinter:id="mainTextView"
+        text="ATTENTION !"
+        textSize=Size(16,Size.UNIT_DP)
+        textColor="#ffff0000"/>
+    <Button
+        layout_width=View.FILL_PARENT
+        layout_height="0dp"
+        layout_weight=Value(1)
+        text="Exploser"
+        textSize=Size(R.dimen.buttonExplode,Size.UNIT_DP)
+        textColor="#ffff0000"/>
+</LinearLayout>
+"""
+
+element = parse(string)
+
+```
+
+Il est conseillé d'utiliser les valeurs instanciées (`Value(1)`) pour les valeurs appelées à être modifiées et chaînes de caractères (`"#ffff0000"`) pour celles qui ne le seront pas.
+
+Vous obtiendrez alors un `LinearLayout` QUI CONTIENT LE `LINEARLAYOUT` PRINCIPAL.
+Pour obtenir celui-ci, vous pouvez utiliser:
+
+```python
+lin = element.getViews()[0]
+```
+
+ou
+
+```python
+lin = element.findViewById("base layout")
+```
+
+Tout élément contenu dans `element` est en réalité un `CustomView`.
 
 ## The control
 

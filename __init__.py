@@ -599,6 +599,9 @@ class _containerView(View):
 
     def removeView(self, view):
         self._views.remove(view)
+    
+    def getViews(self):
+        return self._views
 
     def _load_xmlConfig(self, views):
         self._view=views[self._main_id]
@@ -658,6 +661,9 @@ class _displayerView(View):
 
     def removeView(self):
         self._mainview = None
+    
+    def getView(self):
+        return self._mainview
 
     def _load_xmlConfig(self, views):
         self._view = views[self._main_id]
@@ -756,7 +762,7 @@ class ImageButton(View, _Sourced, _Clickable):
     def __init__(self, **args):
         super().__init__(TagNames.IMAGE_BUTTON, **args)
 
-class CustomView(LinearLayout):
+class CustomView(_listed, _containerView, _itemClickable, _Orientable, _Modifiable, _Clickable, _Valueable, _Checkable, _Sourced):
     def __init__(self, tagName, **args):
         super().__init__(**args)
         self._tag = tagName

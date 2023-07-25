@@ -26,7 +26,7 @@
 XML parser (by hand)
 """
 
-from . import CustomView, View
+from . import *
 
 def isValidName(name):
 	"""
@@ -114,9 +114,14 @@ def parse(data):
 					attrval = d[d.index("=") + 1:]
 					if attrname.startswith('android:'):
 						attrname = attrname[ 8 : ]
+					if attrname.startswith('qinter:'):
+						attrname = attrname[ 7 : ]
 					if not isValidName(attrname):
 						raise SyntaxError(str(d), str(i))
-					elemused.set(attrname, eval(attrval))
+					try:
+						elemused.set(attrname, eval(attrval))
+					except :
+						raise SyntaxError(i)
 				else:
 					raise SyntaxError(i)
 			if not keepelem:
