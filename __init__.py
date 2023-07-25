@@ -551,7 +551,7 @@ class View():
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
-            if i is id:
+            if i == "id":
                 a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
@@ -620,7 +620,7 @@ class _containerView(View):
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
-            if i is id:
+            if i == "id":
                 a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
@@ -679,7 +679,7 @@ class _displayerView(View):
     def __str__(self):
         a = "<" + self.getTagName()
         for i in _expected:
-            if i is id:
+            if i == "id":
                 a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
@@ -764,7 +764,7 @@ class ImageButton(View, _Sourced, _Clickable):
 
 class CustomView(_listed, _containerView, _itemClickable, _Orientable, _Modifiable, _Clickable, _Valueable, _Checkable, _Sourced):
     def __init__(self, tagName, **args):
-        super().__init__(**args)
+        super().__init__(None, **args)
         self._tag = tagName
     
     def set(self, param, value):

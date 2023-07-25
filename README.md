@@ -171,7 +171,7 @@ string = """
         layout_height="0dp"
         layout_weight=Value(1)
         text="Exploser"
-        textSize=Size(R.dimen.buttonExplode,Size.UNIT_DP)
+        textSize=R.dimen.buttonExplode
         textColor="#ffff0000"/>
 </LinearLayout>
 """
