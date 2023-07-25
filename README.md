@@ -21,7 +21,7 @@ class MainLayout(Layout):
     
     def initUI(self):
         ... # here is the place where you'll define your views. 
-            # You can also parse a string containing your data, but not that it will generate CustomViews
+            # You can also parse a string containing your data, but note that it will generate CustomView
 
     def onShow(self):
         ...
