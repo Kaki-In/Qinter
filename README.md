@@ -21,7 +21,7 @@ class MainLayout(Layout):
     
     def initUI(self):
         ... # here is the place where you'll define your views. 
-            # You can also parse a string containing your data, but note that it will generate CustomView
+            # You can also parse a string containing your data, but note that it will generate only CustomViews (see Parsing strings section)
 
     def onShow(self):
         ...
@@ -150,6 +150,11 @@ will still work.
 You can also parse a string by this way :
 ```python
 from Qinter.parser import parse
+from Qinter import *
+
+...
+R.dimen.buttonExplode = Size(16,Size.UNIT_DP)
+...
 
 string = """
 <LinearLayout
@@ -157,19 +162,19 @@ string = """
     android:layout_height=View.MATCH_PARENT
     orientation="vertical"
     qinter:id="base layout"
-    android:background=Color(Color.OPAC+Color.FLOPCREATION)>
+    android:background=Color(Color.OPAC + Color.FLOPCREATION)>
     <TextView
         layout_width=View.FILL_PARENT
         layout_height="0dp"
-        layout_weight=Value(3)
+        layout_weight=Value( 3 )
         qinter:id="mainTextView"
         text="ATTENTION !"
-        textSize=Size(16,Size.UNIT_DP)
+        textSize=Size(16, Size.UNIT_DP)
         textColor="#ffff0000"/>
     <Button
         layout_width=View.FILL_PARENT
         layout_height="0dp"
-        layout_weight=Value(1)
+        layout_weight=Value( 1 )
         text="Exploser"
         textSize=R.dimen.buttonExplode
         textColor="#ffff0000"/>
@@ -180,22 +185,24 @@ element = parse(string)
 
 ```
 
-Il est conseillé d'utiliser les valeurs instanciées (`Value(1)`) pour les valeurs appelées à être modifiées et chaînes de caractères (`"#ffff0000"`) pour celles qui ne le seront pas.
+It is better to use instanced values (`Size(16,Size.UNIT_DP)`) for the values that are susceptibles to be changed and the strings (`"#ffff0000"`) for those that will not be modified. You can also use the resources (`R.dimen.buttonExplode`) for the constants import.
 
-Vous obtiendrez alors un `LinearLayout` QUI CONTIENT LE `LINEARLAYOUT` PRINCIPAL.
-Pour obtenir celui-ci, vous pouvez utiliser:
+Note that you can forget `android:` or `qpython:` in the beginning of the lines, that are there to be able to prase an xml android app, and if you add spaces into the constants (`Size(16, Size.UNIT_DP)` for example), the parse will not fail in the extent that they are into parenthesis (`[`, `{`, or `(`).
+
+You'll then obtain a `LinearLayout` THAT CONTAINS THE `LinearLayout` IN THE STRING.
+To get this one, you can use :
 
 ```python
 lin = element.getViews()[0]
 ```
 
-ou
+or
 
 ```python
 lin = element.findViewById("base layout")
 ```
 
-Tout élément contenu dans `element` est en réalité un `CustomView`.
+All elements parsed by the parser are in fact `CustomView`s.
 
 ## The control
 

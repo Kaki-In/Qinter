@@ -79,6 +79,7 @@ def parse(data):
 			elemdivision = [""]
 			actQuote = None
 			lastIsSlash = False
+			parenthesis = ""
 			for k in i[1:-1]:
 				if str(actQuote) in "\"'":
 					if lastIsSlash:
@@ -89,12 +90,27 @@ def parse(data):
 						elemdivision[-1] += k
 					else:
 						elemdivision[-1] += k
+				elif parenthesis:
+					if k in "[{(":
+						parenthesis += k
+					elif k in "]})":
+						i = "]})".index(k)
+						if "[{(" [ i ] != parenthesis[ -1 ]:
+							raise SyntaxError("Unmatched parenthesis", repr(parenthesis[ -1 ]))
+						parenthesis = parenthesis[ :-1 ]
+					elemdivision[ -1 ] += k
 				else:
-					if k is " ":
-						elemdivision.append("")
+					if k == " ":
+						if elemdivision[ -1 ]:
+							elemdivision.append("")
 					elif k in "\"'":
 						actQuote = k
 						elemdivision[-1] += k
+					elif k in "[{(":
+						parenthesis += k
+						elemdivision[ -1 ] += k
+					elif k in "]})":
+						raise SyntaxError("Unmatched parenthesis", k)
 					else:
 						elemdivision[-1] += k
 			name = elemdivision[0]
