@@ -552,7 +552,7 @@ class View():
         a = "<" + self.getTagName()
         for i in _expected:
             if i is id:
-                a += "\n android:" + str(i) + "=" + repr(self._id)
+                a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
         a += "/>"
@@ -618,7 +618,7 @@ class _containerView(View):
         a = "<" + self.getTagName()
         for i in _expected:
             if i is id:
-                a += "\n android:" + str(i) + "=" + repr(self._id)
+                a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
 
@@ -674,7 +674,7 @@ class _displayerView(View):
         a = "<" + self.getTagName()
         for i in _expected:
             if i is id:
-                a += "\n android:" + str(i) + "=" + repr(self._id)
+                a += "\n qinter:id=" + repr(self._id)
             elif self._args[i] != _expected[i][1]:
                 a += "\n android:" + str(i) + "=" + repr(str(getSymbolName(self._args[i])))
         if not self._mainview is None:
