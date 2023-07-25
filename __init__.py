@@ -54,7 +54,7 @@ class Layout():
     android:layout_height="fill_parent"
     android:background="#0000"
     xmlns:android="http://schemas.android.com/apk/res/android">"""
-            a += " " + str( self._view ).replace("\n", "\n ")
+            a += " " + self._view.displayString().replace("\n", "\n ")
             a += "\n</LinearLayout>"
             screen = _xmlScreen(a, self)
             self._screen = screen
