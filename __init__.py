@@ -583,8 +583,29 @@ class _listed(View):
         self._list = list(liste)
 
     def getList(self):
-        return self._list
-
+        return self._list.copy()
+    
+    def addItem(self, item):
+        liste = self._list.copy()
+        liste.append(item)
+        self.setList(liste)
+    
+    def insertItem(self, position, item):
+        liste = self._list.copy()
+        liste.insert(position, item)
+        self.setList(liste)
+ 
+    def removeItem(self, item):
+        liste = self._list.copy()
+        liste.remove(item)
+        self.setList(liste)
+ 
+    def popItem(self, position):
+        liste = self._list.copy()
+        result = liste.pop(position)
+        self.setList(liste)
+        return result
+ 
     def _load_xmlConfig(self, views):
         super()._load_xmlConfig(views)
         self.setList(self.getList())

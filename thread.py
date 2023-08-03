@@ -1,5 +1,6 @@
 from threading import Thread as _thread
 import fsw2modif as _fsw2
+import time as _tm
 
 class Thread():
     def __init__(self):
@@ -51,9 +52,9 @@ class Timer(Thread):
     
     def run(self):
         while self.canBeRunning():
-            n = monotonic()
-            while monotonic()-n > self._timeout and self.canBeRunning():
-                sleep(0.1)
+            n = _tm.monotonic()
+            while _tm.monotonic()-n < self._timeout and self.canBeRunning():
+                _tm.sleep(0.1)
             if self.canBeRunning():
                 self.signal.emit()
     
