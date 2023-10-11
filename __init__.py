@@ -8,11 +8,11 @@ from .fsw2modif import  FullScreenWrapper2App as _FullScreenWrapper2App,\
                         click_EventHandler as _fsw2click_EventHandler,\
                         itemclick_EventHandler as _fsw2itemclick_EventHandler
 
-# from androidhelper import Android as _Android
+from androidhelper import Android as _Android
 import random
 import os
 
-# FullScreenWrapper2App.initialize(_Android())
+FullScreenWrapper2App.initialize(_Android())
 
 class TagNames:
     LINEAR_LAYOUT          = 0
