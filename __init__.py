@@ -12,7 +12,7 @@ from androidhelper import Android as _Android
 import random
 import os
 
-FullScreenWrapper2App.initialize(_Android())
+_FullScreenWrapper2App.initialize(_Android())
 
 class TagNames:
     LINEAR_LAYOUT          = 0
