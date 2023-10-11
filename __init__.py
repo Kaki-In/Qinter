@@ -1,11 +1,18 @@
 #-*-coding:utf8;-*-
-	
-import fsw2modif as _fsw2
-from androidhelper import Android as _Android
+
+
+from .fsw2modif import  FullScreenWrapper2App as _FullScreenWrapper2App,\
+                        Layout as _fsw2Layout, \
+                        key_EventHandler as _fsw2key_EventHandler, \
+                        DelayHandler as _fsw2DelayHandler, \
+                        click_EventHandler as _fsw2click_EventHandler,\
+                        itemclick_EventHandler as _fsw2itemclick_EventHandler
+
+# from androidhelper import Android as _Android
 import random
 import os
 
-_fsw2.FullScreenWrapper2App.initialize(_Android())
+# FullScreenWrapper2App.initialize(_Android())
 
 class TagNames:
     LINEAR_LAYOUT          = 0
@@ -24,7 +31,7 @@ class TagNames:
     IMAGE_VIEW             = 13
     IMAGE_BUTTON           = 14
 
-class _xmlScreen(_fsw2.Layout):
+class _xmlScreen(_fsw2Layout):
     def __init__(self, xml, parent):
         super().__init__(xml, "QSL4AUI")
         self.parent = parent
@@ -58,7 +65,7 @@ class Layout():
             a += "\n</LinearLayout>"
             screen = _xmlScreen(a, self)
             self._screen = screen
-            _fsw2.FullScreenWrapper2App.show_layout(screen, 0 if keep else 1)
+            _FullScreenWrapper2App.show_layout(screen, 0 if keep else 1)
 
     def _on_show(self):
         self._view._load_xmlConfig(self._screen.views)
@@ -77,16 +84,16 @@ class Layout():
         return self._view.findViewById(id)
     
     def addKeyEvent(self, key, func):
-        self._screen.add_event(_fsw2.key_EventHandler(key, self._screen, func))
+        self._screen.add_event(_fsw2key_EventHandler(key, self._screen, func))
         
     def addDelay(self, timeout, func):
-        self._screen.add_delay(_fsw2.DelayHandler(timeout, func))
+        self._screen.add_delay(_fsw2DelayHandler(timeout, func))
     
     def main(self):
-        _fsw2.FullScreenWrapper2App.eventloop()
+        _FullScreenWrapper2App.eventloop()
     
     def close(self):
-        _fsw2.FullScreenWrapper2App.close_layout()
+        _FullScreenWrapper2App.close_layout()
      
     def getFullScreenWrapper2AppLayout(self):
         return self._screen
@@ -169,7 +176,7 @@ class _Modifiable(_Textable):
         if not hasattr(self, '_funcs'):
             self._funcs = {}
         self._funcs.update( {key: func} )
-        self._view.add_event(_fsw2.key_EventHandler(key, self._view, lambda self, view, k=key:self._onclick(view, k)))
+        self._view.add_event(_fsw2key_EventHandler(key, self._view, lambda self, view, k=key:self._onclick(view, k)))
         
 class _Clickable():
     def _onclick(self, view, dummy):
@@ -177,7 +184,7 @@ class _Clickable():
 
     def setOnClickListener(self, func):
         self._func=func
-        self._view.add_event(_fsw2.click_EventHandler(self._view, self._onclick))
+        self._view.add_event(_fsw2click_EventHandler(self._view, self._onclick))
 
 class _itemClickable():
     def _onclick(self, view, dummy):
@@ -186,7 +193,7 @@ class _itemClickable():
 
     def setOnItemClickListener(self, func):
         self._func=func
-        self._view.add_event(_fsw2.itemclick_EventHandler(self._view, self._onclick))
+        self._view.add_event(_fsw2itemclick_EventHandler(self._view, self._onclick))
 
 class _Valueable():
     def setValue(self, value):
@@ -1000,3 +1007,4 @@ class R:
     integer = _ressource(int)
     bool = _ressource(bool)
     src = _ressource(Path)
+    layout = _ressource(CustomView)
